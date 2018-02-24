@@ -7,6 +7,10 @@
 
 #define MAX_PAYLOAD_SIZE 512
 
+#define DataPacket 0xA0
+#define AckPacket 0xA1
+#define EndPacket 0xA2
+
 struct MYGBN_Packet {
   unsigned char protocol[3];                  /* protocol string (3 bytes) "gbn" */
   unsigned char type;                         /* type (1 byte) */
@@ -17,6 +21,11 @@ struct MYGBN_Packet {
 
 struct mygbn_sender {
   int sd; // GBN sender socket
+  int N;
+  int send_base;
+  int timeout;
+  struct sockaddr_in to;
+  socklen_t toLen;
   // ... other member variables
 };
 
@@ -26,6 +35,9 @@ void mygbn_close_sender(struct mygbn_sender* mygbn_sender);
 
 struct mygbn_receiver {
   int sd; // GBN receiver socket
+  int currentSeqNum;
+  struct sockaddr_in from;
+  socklen_t fromLen;
   // ... other member variables
 };
 

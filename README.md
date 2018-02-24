@@ -38,17 +38,17 @@ struct mygbn_receiver {
 
 ### 3.2 APIs
 Our GBN protocol exports a set of APIs that are called by both `myftpclient` and `myftpserver` (see our programs). Your job is to provide implementation for the APIs. Specifically, myftpclient calls the following APIs:
-- `void mygbn_init_sender(struct mygbn_sender* mygbn_sender, char* ip, int port, int N, int timeout)`: It initializes the sender socket and the related server IP address and port in `mygbn_sender`. It also specifies the parameter N for the GBN protocol and the retransmission
-timeout timeout in seconds.
+- `void mygbn_init_sender(struct mygbn_sender* mygbn_sender, char* ip, int port, int N, int timeout)`: It initializes the sender socket and the related server IP address and port in `mygbn_sender`. It also specifies the parameter `N` for the GBN protocol and the retransmission
+timeout `timeout` in seconds.
 
 - `int mygbn_send(struct mygbn_sender* mygbn_sender, unsigned char* buf, int len)`:
-It sends the data in buf of size len to the receiver. It returns the number of bytes that have been sent, or -1 if there is any error.
+It sends the data in `buf` of size len to the receiver. It returns the number of bytes that have been sent, or -1 if there is any error.
 
 - `void mygbn_close_sender(struct mygbn_sender* mygbn_sender)`: It terminates the sender connection, closes the sender socket, and releases all resources.
 
 On the other hand, `myftpserver` calls the following APIs:
 
-- `void mygbn_init_receiver(struct mygbn_receiver* mygbn_receiver, int port)`: It initializes the receiver socket and binds the port to the socket in mygbn receiver.
+- `void mygbn_init_receiver(struct mygbn_receiver* mygbn_receiver, int port)`: It initializes the receiver socket and binds the port to the socket in `mygbn_receiver`.
 
 - `int mygbn_recv(struct mygbn_receiver* mygbn_receiver, unsigned char* buf, int len)`: It receives the data in buf of size len to the receiver. It returns the size of packets that have been received, or -1 if there is any error.
 
@@ -175,10 +175,10 @@ server> sudo apt-get install libnetfilter-queue-dev
 
 Then we set up NFQUEUE to intercept all UDP packets:
 ```
-server> sudo iptables -t filter -F
-server> sudo iptables -A INPUT -p udp -s $clientip -d $serverip \
+sudo iptables -t filter -F
+sudo iptables -A INPUT -p udp -s $clientip -d $serverip \
             -j NFQUEUE --queue-num 0
-server> sudo iptables -A OUTPUT -p udp -s $serverip -d $clientip \
+sudo iptables -A OUTPUT -p udp -s $serverip -d $clientip \
             -j NFQUEUE --queue-num 0
 ```
 
@@ -203,7 +203,7 @@ vm2> ./myftpclient <server ip addr> <server port> <file> <N> <timeout>
 Note that file is the input file, `N` is the parameter *N* in GBN, and `timeout` (in seconds) is the timeout period. Please note the following:
 
 - The `myftpclient` program should terminate gracefully after it sends out a file successfully. On the other hand, the `myftpserver` can serve another data transfer session without restart.
-• Our testing environment is Linux; more precisely, the Linux OS of your VMs.
+- Our testing environment is Linux; more precisely, the Linux OS of your VMs.
 - Your programs must be implemented in C or C++.
 - Your programs must send/receive data under UDP.
 
