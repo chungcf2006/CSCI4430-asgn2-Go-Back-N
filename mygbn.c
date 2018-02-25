@@ -37,17 +37,40 @@ void mygbn_init_sender(struct mygbn_sender* mygbn_sender, char* ip, int port, in
   mygbn_sender->timeout = timeout;
 }
 
+// Thread for receiving AckPacket
+void mygbn_recv_ack (struct mygbn_sender* mygbn_sender) {
+
+}
+
+// Thread for triggering the retransmissions upon timeouts
+void mygbn_trigger_retransmission (struct mygbn_sender* mygbn_sender) {
+
+}
+
 int mygbn_send(struct mygbn_sender* mygbn_sender, unsigned char* buf, int len){
   int byte_left = len;
-  while (byte_left > 0) {
-    struct MYGBN_Packet data_packet;
-    data_packet.protocol[0] = 'g';
-    data_packet.protocol[1] = 'b';
-    data_packet.protocol[2] = 'n';
-    data_packet.type = DataPacket;
+  // while (byte_left > 0) {
+  //   struct MYGBN_Packet data_packet;
+  //   data_packet.protocol[0] = 'g';
+  //   data_packet.protocol[1] = 'b';
+  //   data_packet.protocol[2] = 'n';
+  //   data_packet.type = DataPacket;
+  //   data_packet.seqNum = mygbn_sender->seqNum;
+  //   data_packet.length = sizeof(data_packet);
+  //   byte_left -= sendto(mygbn_sender->sd, buf, len, 0, (struct sockaddr *)&mygbn_sender->to, mygbn_sender->toLen);
+  // }
+
+  int i, packetContentLength;
+  struct MYGBN_Packet data_packet;
+  data_packet.protocol[0] = 'g';
+  data_packet.protocol[1] = 'b';
+  data_packet.protocol[2] = 'n';
+  data_packet.type = DataPacket;
+  for (i = send_base; i < send_base+mygbn_sender->N && byte_left > 0; i++) {
+    packetContentLength = MIN(byte_left, MAX_PAYLOAD_SIZE);
     data_packet.seqNum = mygbn_sender->seqNum;
-    data_packet.length = sizeof(data_packet);
-    byte_left -= sendto(mygbn_sender->sd, buf, len, 0, (struct sockaddr *)&mygbn_sender->to, mygbn_sender->toLen);
+    data_packet.length = sizeof(data_packet) + packetContentLength;
+    byte_left -= sendto(mygbn_sender->sd, buf[i*MAX_PAYLOAD_SIZE], packetContentLength, 0, (struct sockaddr *)&mygbn_sender->to, mygbn_sender->toLen);
   }
   return len;
 }

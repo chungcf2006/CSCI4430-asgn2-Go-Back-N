@@ -5,6 +5,8 @@
 #ifndef __mygbn_h__
 #define __mygbn_h__
 
+#define MIN(a,b) (((a)<(b))?(a):(b))
+
 #define MAX_PAYLOAD_SIZE 512
 
 #define DataPacket 0xA0
@@ -32,6 +34,10 @@ struct mygbn_sender {
 void mygbn_init_sender(struct mygbn_sender* mygbn_sender, char* ip, int port, int N, int timeout);
 int mygbn_send(struct mygbn_sender* mygbn_sender, unsigned char* buf, int len);
 void mygbn_close_sender(struct mygbn_sender* mygbn_sender);
+// Custom Functions
+void mygbn_recv_ack(struct mygbn_sender* mygbn_sender);
+void mygbn_trigger_retransmission(struct mygbn_sender* mygbn_sender);
+
 
 struct mygbn_receiver {
   int sd; // GBN receiver socket
