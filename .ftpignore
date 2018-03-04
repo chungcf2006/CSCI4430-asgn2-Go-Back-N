@@ -3,5 +3,5 @@
 .DS_Store
 desktop.ini
 .git
-myftpserver
 myftpclient
+myctpserver
