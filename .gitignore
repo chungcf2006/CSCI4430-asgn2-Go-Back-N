@@ -54,3 +54,10 @@ dkms.conf
 # OS Files
 .DS_Store
 desktop.ini
+
+myftpclient
+myctpserver
+
+troller
+
+sync.sh
